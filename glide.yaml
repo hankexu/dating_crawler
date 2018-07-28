@@ -1,0 +1,13 @@
+package: crawler
+import:
+- package: golang.org/x/net
+  subpackages:
+  - html/charset
+- package: golang.org/x/text
+  version: v0.3.0
+  subpackages:
+  - encoding
+  - encoding/unicode
+  - transform
+- package: gopkg.in/olivere/elastic.v5
+- package: github.com/mailru/easyjson
