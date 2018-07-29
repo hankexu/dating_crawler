@@ -16,6 +16,8 @@ type Profile struct {
 	Constellation string // 星座
 	House         string
 	Car           string
+	Address       string
+	Photo         string
 }
 
 func FromJsonObj(o interface{}) (Profile, error) {

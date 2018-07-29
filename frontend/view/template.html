@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form method="get" action="/search">
+    <input type="text" value="{{.Query}}" name="q" style="width: 800px;">
+    <input type="submit" value="搜索">
+</form>
+<h2>共为你找到相关结果约为{{.Hits}}个。显示从{{.Start}}起共{{len .Items}}个。</h2>
+
+<table>
+<tbody>
+{{range .Items}}
+<tr>
+    <td><a href="{{.Url}}">{{.Payload.Name}}</a></td>
+{{with .Payload}}
+    <td>{{.Gender}}</td>
+    <td><img src="{{.Photo}}" style="width: 100px"></td>
+    <td>{{.Age}}</td>
+    <td>{{.Address}}</td>
+    <td>{{.Height}}</td>
+    <td>{{.Weight}}</td>
+    <td>{{.Income}}</td>
+    <td>{{.Marriage}}</td>
+    <td>{{.Education}}</td>
+    <td>{{.Occupation}}</td>
+    <td>{{.Census}}</td>
+    <td>{{.Constellation}}</td>
+    <td>{{.House}}</td>
+    <td>{{.Car}}</td>
+{{end}}
+</tr>
+{{else}}
+<div>没有找到相关用户</div>
+</tbody>
+{{end}}
+</table>
+<div align="middle">
+{{if ge .PrevFrom  0}}
+    <a href="search?q={{.Query}}&from={{.PrevFrom}}">上一页</a>
+{{end}}
+    <a href="search?q={{.Query}}&from={{.NextFrom}}">下一页</a>
+</div>
+</body>
+</html>

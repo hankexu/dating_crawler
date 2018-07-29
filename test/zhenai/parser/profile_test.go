@@ -37,10 +37,12 @@ func TestParseProfile(t *testing.T) {
 			Gender:        "女",
 			Constellation: "处女座",
 			Car:           "未购车",
+			Address:       "四川阿坝",
+			Photo:         "http://photo15.zastatic.com/images/photo/27543/110171680/1515042497285.jpg?scrop=1&crop=1&w=650&h=650&cpos=north",
 		},
 	}
 	if actual != expected {
-		t.Errorf("expected %v; but was %v", expected, actual)
+		t.Errorf("expected %v;\n but was %v", expected, actual)
 	}
 
 	//for i, url := range expectedUrls {

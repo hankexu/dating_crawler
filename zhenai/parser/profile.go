@@ -15,6 +15,7 @@ var educationRe = regexp.MustCompile(`<td><span class="label">学历：</span>([
 var marriageRe = regexp.MustCompile(`<td><span class="label">婚况：</span>([^<]+)</td>`)
 var occupationRe = regexp.MustCompile(`<td><span class="label">职业：</span>([^<]+)</td>`)
 var censusRe = regexp.MustCompile(`<td><span class="label">籍贯：</span>([^<]+)</td>`)
+var addressRe = regexp.MustCompile(`<td><span class="label">工作地：</span>([^<]+)</td>`)
 
 var genderRe = regexp.MustCompile(`<td><span class="label">性别：</span><span field="">([^<]+)</span></td>`)
 var constellationRe = regexp.MustCompile(`<td><span class="label">星座：</span><span field="">([^<]+)</span></td>`)
@@ -23,6 +24,8 @@ var carRe = regexp.MustCompile(`<td><span class="label">是否购车：</span><s
 
 var guessRe = regexp.MustCompile(`<a class="exp-user-name"[^>]*href="(http://album.zhenai.com/u/[\d]+)">([^<]+)</a>`)
 var idUrlRe = regexp.MustCompile(`http://album.zhenai.com/u/([\d]+)`)
+
+var photoRe = regexp.MustCompile(`<img class="hidden" src="(http://[^"]*)" alt="[^>]*>`)
 
 func extractString(contents []byte, re *regexp.Regexp) string {
 	match := re.FindSubmatch(contents)
@@ -59,6 +62,8 @@ func ParseProfile(contents []byte, url string, name string) engine.ParseResult {
 	profile.Marriage = extractString(contents, marriageRe)
 	profile.Occupation = extractString(contents, occupationRe)
 	profile.House = extractString(contents, houseRe)
+	profile.Address = extractString(contents, addressRe)
+	profile.Photo = extractString(contents, photoRe)
 	result := engine.ParseResult{
 		Items: []engine.Item{
 			{
