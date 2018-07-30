@@ -42,21 +42,4 @@ func TestParseProfile(t *testing.T) {
 	if actual != expected {
 		t.Errorf("expected %v; but was %v", expected, actual)
 	}
-
-	//for i, url := range expectedUrls {
-	//	if result.Requests[i].URL!=url {
-	//		t.Errorf("expected url #%d: %s; but was %d", i,url, result.Requests[i].URL)
-	//	}
-	//}
-	//if len(result.Items) !=resultSize {
-	//	t.Errorf("result should have %d items;" +
-	//		"but had %d", resultSize, len(result.Requests))
-	//}
-	//
-	//for i, city := range expectedCities {
-	//	if result.Items[i].(string)!= city {
-	//		t.Errorf("expected city #%d: %s; but was %s", i,city, result.Items[i].(string))
-	//	}
-	//}
-
 }

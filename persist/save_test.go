@@ -31,7 +31,7 @@ func TestSave(t *testing.T) {
 
 	client, err := elastic.NewClient(
 		elastic.SetSniff(false))
-	err = save(client, index, expected)
+	err = Save(client, index, expected)
 	if err != nil {
 		t.Errorf("Save failed: %v", err)
 	}

@@ -1,6 +1,10 @@
-hash: 49e7005f635e7e341d84d4632c5051798146678611b1633f632f8f86d26145bc
-updated: 2018-07-28T22:15:47.6892356+08:00
+hash: f901d25d5cda66b95f23971794c4e11817f6fa9ad411ac61acb069a548986b2b
+updated: 2018-07-30T21:20:31.0454232+08:00
 imports:
+- name: github.com/gomodule/redigo
+  version: 9c11da706d9b7902c6da69c592f75637793fe121
+  subpackages:
+  - redis
 - name: github.com/mailru/easyjson
   version: d5012789d6659eeed305f54c1b1542e7b65829e6
   subpackages:
