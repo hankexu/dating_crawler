@@ -1,10 +1,13 @@
 package engine
 
+import "crawler/redis"
+
 type ConcurrentEngine struct {
 	Scheduler        Scheduler
 	WorkerCount      int
 	ItemChan         chan Item
 	RequestProcessor Processor
+	RedisConn        redis.Conn
 }
 
 type Processor func(r Request) (ParseResult, error)
@@ -28,7 +31,7 @@ func (e *ConcurrentEngine) Run(seeds ...Request) {
 	}
 
 	for _, r := range seeds {
-		if isDuplicate(r.URL) {
+		if e.RedisConn.IsDuplicate(r.URL) {
 			continue
 		}
 		e.Scheduler.Submit(r)
@@ -44,7 +47,7 @@ func (e *ConcurrentEngine) Run(seeds ...Request) {
 		}
 
 		for _, request := range result.Requests {
-			if isDuplicate(request.URL) {
+			if e.RedisConn.IsDuplicate(request.URL) {
 				continue
 			}
 			e.Scheduler.Submit(request)
@@ -65,14 +68,4 @@ func (e *ConcurrentEngine) createWorker(in chan Request, out chan ParseResult, r
 			out <- result
 		}
 	}()
-}
-
-var visitedUrls = make(map[string]bool)
-
-func isDuplicate(url string) bool {
-	if visitedUrls[url] {
-		return true
-	}
-	visitedUrls[url] = true
-	return false
 }

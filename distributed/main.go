@@ -3,22 +3,17 @@ package main
 import (
 	"crawler/config"
 	"crawler/engine"
+	"crawler/model"
 	"crawler/persist"
 	"crawler/persist/client"
+	"crawler/redis"
 	"crawler/rpcsupport"
 	"crawler/scheduler"
 	worker "crawler/worker/client"
 	"crawler/zhenai/parser"
 	"flag"
-	"fmt"
 	"log"
 	"net/rpc"
-	"strings"
-)
-
-var (
-	itemSaverHost = flag.String("itemsaver_host", "", "ItemSaver host")
-	workerHosts   = flag.String("worker_hosts", "", "Worker Hosts")
 )
 
 func main() {
@@ -27,21 +22,30 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	pool := createClientPool(strings.Split(*workerHosts, ","))
+	conf, err := model.LoadConfig("config.json")
+	if err != nil {
+		panic(err)
+	}
+	pool := createClientPool(conf.Workers)
 	processor := worker.CreateProcessor(pool)
 	if err != nil {
 		panic(err)
 	}
-	itemChan, err = client.ItemSaver(fmt.Sprintf(":%v", *itemSaverHost))
+	itemChan, err = client.ItemSaver(conf.Saver)
 	if err != nil {
 		panic(err)
 	}
 
+	red, err := redis.CreateConn(config.RedisPort)
+	if err != nil {
+		panic(err)
+	}
 	e := engine.ConcurrentEngine{
 		Scheduler:        &scheduler.QueuedScheduler{},
 		WorkerCount:      100,
 		ItemChan:         itemChan,
 		RequestProcessor: processor,
+		RedisConn:        red,
 	}
 	e.Run(engine.Request{
 		URL:    "http://www.zhenai.com/zhenghun",
@@ -52,7 +56,7 @@ func main() {
 func createClientPool(hosts []string) chan *rpc.Client {
 	var clients []*rpc.Client
 	for _, h := range hosts {
-		client, err := rpcsupport.NewClient(fmt.Sprintf(":%s", h))
+		client, err := rpcsupport.NewClient(h)
 		if err != nil {
 			log.Printf("error connecting to %s: %v", h, err)
 		} else {
